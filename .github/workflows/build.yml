@@ -1,4 +1,4 @@
-name: Gerar Executável macOS (Compatível)
+name: Gerar Executável macOS (Compatibilidade Catalina)
 
 on:
   push:
@@ -6,8 +6,8 @@ on:
 
 jobs:
   build:
-    # Alteramos para macos-13, que ainda suporta builds para sistemas Intel/Catalina
-    runs-on: macos-13
+    # Usamos o macos-11 para garantir suporte ao macOS 10.15
+    runs-on: macos-11
 
     steps:
     - name: Checkout código
@@ -24,7 +24,7 @@ jobs:
 
     - name: Gerar Executável com PyInstaller
       env:
-        # Esta linha é o segredo: diz ao compilador para suportar o macOS 10.15
+        # Força a compilação a ser compatível com a versão do teu utilizador
         MACOSX_DEPLOYMENT_TARGET: 10.15
       run: |
         pyinstaller --windowed --noconsole --onefile \
