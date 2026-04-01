@@ -4,14 +4,14 @@ macos_instance:
 build_task:
   name: Gerar Executável macOS (Compatível 10.15)
   
+  # Usamos o python3 do sistema para evitar dependências modernas do Homebrew
   setup_script:
-    # Usamos o python3 que já vem no macOS do Cirrus (geralmente 3.9 ou 3.10)
     - python3 -m pip install --upgrade pip
     - python3 -m pip install customtkinter openpyxl pyinstaller
 
   build_script:
-    # Forçamos a compatibilidade retroativa
     - export MACOSX_DEPLOYMENT_TARGET=10.15
+    # Voltamos ao --onefile para facilitar o envio de um único arquivo
     - python3 -m PyInstaller --windowed --noconsole --onefile --collect-all customtkinter --icon=app.icns app.py
 
   binaries_artifacts:
