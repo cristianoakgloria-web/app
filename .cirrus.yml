@@ -2,20 +2,19 @@ macos_instance:
   image: ghcr.io/cirruslabs/macos-monterey-base:latest
 
 build_task:
-  name: Gerar Executável macOS (Cirrus)
+  name: Gerar Executável macOS
   
-  # Instala o que o teu app precisa (sem o pandas para ser mais rápido)
   setup_script:
+    # Instala o Python 3.10
     - brew install python@3.10
-    - ln -s /usr/local/opt/python@3.10/bin/python3 /usr/local/bin/python
-    - python -m pip install --upgrade pip
-    - python -m pip install customtkinter openpyxl pyinstaller
+    # Usa o caminho direto que o log nos mostrou para instalar as dependências
+    - /opt/homebrew/bin/pip3.10 install --upgrade pip
+    - /opt/homebrew/bin/pip3.10 install customtkinter openpyxl pyinstaller
 
-  # Cria o executável focado no Mac 10.15
   build_script:
     - export MACOSX_DEPLOYMENT_TARGET=10.15
-    - pyinstaller --windowed --noconsole --onefile --collect-all customtkinter --icon=app.icns app.py
+    # Usa o Python 3.10 instalado pelo brew para rodar o PyInstaller
+    - /opt/homebrew/bin/python3.10 -m PyInstaller --windowed --noconsole --onefile --collect-all customtkinter --icon=app.icns app.py
 
-  # Onde o Cirrus vai colocar o ficheiro para tu sacares
   binaries_artifacts:
     path: "dist/app"
