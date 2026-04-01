@@ -13,8 +13,8 @@ build_task:
 
   build_script:
     - export MACOSX_DEPLOYMENT_TARGET=10.15
-    # Usa o Python 3.10 instalado pelo brew para rodar o PyInstaller
-    - /opt/homebrew/bin/python3.10 -m PyInstaller --windowed --noconsole --onefile --collect-all customtkinter --icon=app.icns app.py
+    # Mudamos para --onedir e removemos o --onefile
+    - /opt/homebrew/bin/python3.10 -m PyInstaller --windowed --noconsole --onedir --collect-all customtkinter --icon=app.icns app.py
 
   binaries_artifacts:
-    path: "dist/app"
+    path: "dist/app.app/**" # Isto vai pegar em todos os ficheiros dentro da pasta .app
