@@ -1,12 +1,13 @@
-name: Gerar Executável macOS
+name: Gerar Executável macOS (Compatível)
 
 on:
   push:
-    branches: [ main ]  # O build corre sempre que enviares código para a branch main
+    branches: [ main ]
 
 jobs:
   build:
-    runs-on: macos-latest  # Utiliza um ambiente macOS real na nuvem
+    # Alteramos para macos-13, que ainda suporta builds para sistemas Intel/Catalina
+    runs-on: macos-13
 
     steps:
     - name: Checkout código
@@ -22,8 +23,10 @@ jobs:
         pip install customtkinter openpyxl pandas pyinstaller
 
     - name: Gerar Executável com PyInstaller
+      env:
+        # Esta linha é o segredo: diz ao compilador para suportar o macOS 10.15
+        MACOSX_DEPLOYMENT_TARGET: 10.15
       run: |
-        # Gerar o executável único
         pyinstaller --windowed --noconsole --onefile \
         --collect-all customtkinter \
         --icon=app.icns \
@@ -32,5 +35,5 @@ jobs:
     - name: Guardar Executável (Artifact)
       uses: actions/upload-artifact@v4
       with:
-        name: Sistema-Mac-Final
-        path: dist/  # Alterado para 'dist/' para capturar tudo o que foi gerado
+        name: Sistema-Mac-Catalina
+        path: dist/
