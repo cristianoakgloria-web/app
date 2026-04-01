@@ -1,0 +1,32 @@
+name: Gerar Executável macOS
+
+on:
+  push:
+    branches: [ main ]  # Roda sempre que fizeres push para a branch main
+
+jobs:
+  build:
+    runs-on: macos-latest  # Aqui acontece a "magia": usa um Mac real na nuvem
+
+    steps:
+    - name: Checkout código
+      uses: actions/checkout@v3
+
+    - name: Configurar Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.10'
+
+    - name: Instalar Dependências
+      run: |
+        pip install customtkinter openpyxl pandas pyinstaller
+
+    - name: Gerar Executável com PyInstaller
+      run: |
+        pyinstaller --windowed --noconsole --onefile --collect-all customtkinter --icon=app.icns app.py
+
+    - name: Guardar Executável (Artifact)
+      uses: actions/upload-artifact@v3
+      with:
+        name: Sistema-Mac
+        path: dist/app  # Caminho onde o PyInstaller coloca o ficheiro
