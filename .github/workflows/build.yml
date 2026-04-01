@@ -2,18 +2,18 @@ name: Gerar Executável macOS
 
 on:
   push:
-    branches: [ main ]  # Roda sempre que fizeres push para a branch main
+    branches: [ main ]  # O build corre sempre que enviares código para a branch main
 
 jobs:
   build:
-    runs-on: macos-latest  # Usa a versão mais recente do macOS na nuvem
+    runs-on: macos-latest  # Utiliza um ambiente macOS real na nuvem
 
     steps:
     - name: Checkout código
-      uses: actions/checkout@v4  # Atualizado para v4
+      uses: actions/checkout@v4
 
     - name: Configurar Python
-      uses: actions/setup-python@v5  # Atualizado para v5
+      uses: actions/setup-python@v5
       with:
         python-version: '3.10'
 
@@ -23,11 +23,14 @@ jobs:
 
     - name: Gerar Executável com PyInstaller
       run: |
-        # O comando usa o teu app.py unificado
-        pyinstaller --windowed --noconsole --onefile --collect-all customtkinter --icon=app.icns app.py
+        # Gerar o executável único
+        pyinstaller --windowed --noconsole --onefile \
+        --collect-all customtkinter \
+        --icon=app.icns \
+        app.py
 
     - name: Guardar Executável (Artifact)
-      uses: actions/upload-artifact@v4  # FIX: Atualizado para v4 para evitar o erro de depreciação
+      uses: actions/upload-artifact@v4
       with:
         name: Sistema-Mac-Final
-        path: dist/app  # O executável gerado pelo PyInstaller
+        path: dist/  # Alterado para 'dist/' para capturar tudo o que foi gerado
