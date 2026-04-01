@@ -2,19 +2,17 @@ macos_instance:
   image: ghcr.io/cirruslabs/macos-monterey-base:latest
 
 build_task:
-  name: Gerar Executável macOS
+  name: Gerar Executável macOS (Compatível 10.15)
   
   setup_script:
-    # Instala o Python 3.10
-    - brew install python@3.10
-    # Usa o caminho direto que o log nos mostrou para instalar as dependências
-    - /opt/homebrew/bin/pip3.10 install --upgrade pip
-    - /opt/homebrew/bin/pip3.10 install customtkinter openpyxl pyinstaller
+    # Usamos o python3 que já vem no macOS do Cirrus (geralmente 3.9 ou 3.10)
+    - python3 -m pip install --upgrade pip
+    - python3 -m pip install customtkinter openpyxl pyinstaller
 
   build_script:
+    # Forçamos a compatibilidade retroativa
     - export MACOSX_DEPLOYMENT_TARGET=10.15
-    # Mudamos para --onedir e removemos o --onefile
-    - /opt/homebrew/bin/python3.10 -m PyInstaller --windowed --noconsole --onedir --collect-all customtkinter --icon=app.icns app.py
+    - python3 -m PyInstaller --windowed --noconsole --onefile --collect-all customtkinter --icon=app.icns app.py
 
   binaries_artifacts:
-    path: "dist/app.app/**" # Isto vai pegar em todos os ficheiros dentro da pasta .app
+    path: "dist/app"
