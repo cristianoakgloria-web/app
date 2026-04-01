@@ -2,12 +2,12 @@ name: Gerar Executável macOS (Compatibilidade Catalina)
 
 on:
   push:
-    branches: [ main ]
+    branches: [ main ]  # O build inicia sempre que enviares código para a branch main
 
 jobs:
   build:
-    # Usamos o macos-11 para garantir suporte ao macOS 10.15
-    runs-on: macos-11
+    # Alterado para macos-12 para garantir que o GitHub encontre um servidor disponível
+    runs-on: macos-12 
 
     steps:
     - name: Checkout código
@@ -24,9 +24,12 @@ jobs:
 
     - name: Gerar Executável com PyInstaller
       env:
-        # Força a compilação a ser compatível com a versão do teu utilizador
+        # Força a compatibilidade com a versão 10.15 do teu utilizador
         MACOSX_DEPLOYMENT_TARGET: 10.15
       run: |
+        # --windowed e --noconsole evitam que o terminal abra junto com a app
+        # --onefile compacta tudo num único ficheiro
+        # --collect-all garante que os ficheiros do customtkinter sejam incluídos
         pyinstaller --windowed --noconsole --onefile \
         --collect-all customtkinter \
         --icon=app.icns \
